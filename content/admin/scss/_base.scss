@@ -1,0 +1,255 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: $fontText;
+	font-size: 16px;
+	line-height: $lineHeight;
+	background: grayScale(5%);
+	color: $colorLightGray;
+}
+
+a {
+	color: inherit;
+	text-decoration: underline;
+	
+	&:hover, &:active, &:focus {
+		text-decoration: none;
+	}
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0px;
+	padding: 0px;
+	font-size: 1em;
+	line-height: $lineHeight;
+	font-weight: normal;
+	font-style: normal;
+}
+
+button, a.button {
+	@include border-radius(3px);
+	@include box-sizing(border-box);
+	
+	background: #ffffff;
+	border: 1px solid grayScale(50%);
+	padding: 0px 10px;
+	line-height: 2em;
+	font-size: 1.2 * 16px;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+	
+	&:focus, &:active, &:hover {
+		border-color: grayScale(20%);
+		background: #f0f0f0;
+	}
+	
+	&[type="submit"] {
+		background: mix($colorSuccess, #ffffff, 50%);
+		
+		&:focus, &:active, &:hover {
+			background: mix($colorSuccess, #ffffff, 30%);
+		}
+	}
+	
+	& > .fa-stack {
+		font-size: .5em;
+	}
+}
+
+.input {
+	input, textarea {
+		@include box-sizing(border-box);
+		
+		width: 100%;
+		padding: $rythm;
+		font-size: 1em;
+		line-height: $lineHeight;
+		outline: none;
+		border: 1px solid grayScale(80%);
+		background: #fbfbfb;
+		
+		&:hover, &:active, &:focus {
+			background: #ffffff;
+		}
+	}
+}
+
+#message {
+	text-align: center;
+	padding: $rythm;
+	background: grayScale(10%);
+	color: grayScale(95%);
+	border-bottom: 5px solid $colorDarkGray;
+	
+	&.error {
+		background: mix($colorError, $colorDarkGray, 50%);
+	}
+	
+	&.success {
+		background: mix($colorSuccess, $colorDarkGray, 30%);
+	}
+}
+
+nav#main {
+	@include box-sizing(border-box);
+	
+	float: left;
+	width: $navWidth;
+	color: grayScale(70%);
+	
+	a {
+		display: block;
+		text-decoration: none;
+		padding: .5 * $rythm $rythm .5 * $rythm 2 * $rythm;
+		outline: none;
+		
+		&:hover, &:focus, &:active {
+			background: rgba(255, 255, 255, .1);
+		}
+		
+		&.active {
+			color: grayScale(95%);
+		}
+	}
+	
+	h2 {
+		padding: .5 * $rythm $rythm;
+	}
+	
+	section {
+		padding: $rythm 0px;
+		
+		&:not(:first-child) {
+			border-top: 1px solid rgba(255, 255, 255, .2);
+		}
+	}
+}
+
+#content {
+	@include box-sizing(border-box);
+	
+	background: $colorLightGray;
+	color: $colorDarkGray;
+	margin-left: $navWidth;
+	padding: $rythm;
+	
+	h1 {
+		font-family: $fontBig;
+		font-weight: bold;
+		font-size: 1.8em;
+		line-height: $lineHeight;
+		margin-bottom: $lineHeight;
+	}
+}
+
+#tree {
+	$width: 250px;
+	width: $width;
+	margin: 0px $rythm $rythm 0px;
+	float: left;
+	font-size: .8em;
+	line-height: $rythm;
+	
+	ul, li {
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	& > ul {
+		margin-top: $rythm;
+	}
+	
+	li {
+		&::before {
+			@include fa-icon();
+			
+			content: $fa-var-file;
+			width: 1.2em;
+		}
+		
+		&.hidden::before {
+			content:  $fa-var-file-o;
+		}
+		
+		&.folder {
+			&.highlight {
+				background: #ffffff;
+			}
+			
+			&::before {
+				content: $fa-var-folder;
+			}
+			
+			&.hidden::before {
+				content:  $fa-var-folder-o;
+			}
+		}
+		
+		&.active > a {
+			font-weight: bold;
+		}
+		
+		a {
+			text-decoration: none;
+			outline: none;
+			
+			&:hover, &:active, &:focus {
+				text-decoration: underline;
+			}
+		}
+		
+		ul {
+			margin-left: $rythm;
+		}
+	}
+	
+	& + #pageContent {
+		margin-left: $width + $rythm;
+	}
+}
+
+.mdEdit {
+	resize: none;
+	height: 500px;
+	margin: $rythm 0px 0px;
+	font-family: $fontCode;
+	display: block;
+}
+
+#newPage, #newFolder {
+	.fa-plus {
+		color: #ffffff;
+		position: relative;
+		top: 1px;
+	}
+}
+
+#newPage .fa-plus {
+	top: 3px;
+}
+
+#newDragElement {
+	position: absolute;
+	color: #000000;
+	background: transparentize(#f0f0f0, .4);
+	font-size: .8em;
+	margin: 1px 0px 0px 1px;
+	
+	&::before {
+		@include fa-icon;
+		
+		content: $fa-var-file-o;
+	}
+	
+	&.folder::before {
+		content: $fa-var-folder-o;
+	}
+}
+
+form#login {
+	.input {
+		margin-bottom: $rythm;
+	}
+}

@@ -1,0 +1,99 @@
+<?php
+	
+	namespace Advitum\Cmd;
+	
+	class DB
+	{
+		public static $db = false;
+		
+		public static function connect($host, $user, $password, $database) {
+			self::$db = @new \mysqli($host, $user, $password, $database);
+			
+			if(DATABASE_DATABASE == '' || self::$db->connect_error) {
+				?><h1>Content MarkDown Setup</h1>
+<?php if(self::$db->connect_error) { ?><p><?php echo self::$db->connect_error; ?></p><?php } ?>
+<p>Please check your database setup in <strong>content/config.php</strong>.</p>
+<?php
+				exit();
+			}
+			
+			if(self::selectSingle("SHOW TABLES LIKE 'nonces'") === false) {
+				self::query("CREATE TABLE `nonces` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `action` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `nonce` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `used` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`id`)
+)");
+			}
+			
+			if(self::selectSingle("SHOW TABLES LIKE 'users'") === false) {
+				self::query("CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `lastseen` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)");
+			}
+		}
+		
+		public static function query($query) {
+			return self::$db->query($query);
+		}
+		
+		public static function selectArray($query) {
+			$result = self::query($query);
+			$array = array();
+			
+			while($row = $result->fetch_object()) {
+				$array[] = $row;
+			}
+			
+			return $array;
+		}
+		
+		public static function selectSingle($query) {
+			$result = self::query($query);
+			
+			if($row = $result->fetch_object()) {
+				return $row;
+			} else {
+				return false;
+			}
+		}
+		
+		public static function insert($table, $data) {
+			self::query("INSERT INTO " . $table . " " . self::dataArray($data));
+			return self::$db->insert_id;
+		}
+		
+		public static function update($table, $data, $where) {
+			self::query("UPDATE " . $table . " " . self::dataArray($data) . " " . $where);
+		}
+		
+		public static function dataArray($data) {
+			$array = array();
+			
+			foreach($data as $field => $value) {
+				if(is_numeric($field)) {
+					$array[] = $value;
+				} else {
+					if(!is_numeric($value)) {
+						$value = "'" . self::escape($value) . "'";
+					}
+					$array[] = '`' . $field . '` = ' . $value;
+				}
+			}
+			
+			return "SET " . implode(', ', $array);
+		}
+		
+		public static function escape($value) {
+			return self::$db->real_escape_string($value);
+		}
+	}
+	
+?>

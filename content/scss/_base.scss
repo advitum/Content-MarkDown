@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+body {
+	margin: 0px;
+	padding: 0px;
+	font-size: 16px;
+	line-height: $lineHeight;
+	font-family: $fontText;
+	color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+	font-style: normal;
+	font-size: 1em;
+	line-height: $lineHeight;
+	margin: 0px;
+	padding: 0px;
+}
+
+h1, #logo {
+	font-size: 2em;
+	line-height: 1.2em;
+	margin-bottom: 1.2em;
+	font-weight: bold;
+	font-family: $fontBig;
+	color: #111111;
+}
+
+h2 {
+	font-size: 1.5em;
+	line-height: $lineHeight;
+	margin-bottom: $lineHeight;
+	margin-top: 2 * $lineHeight;
+	font-weight: bold;
+	font-family: $fontBig;
+	color: #111111;
+}
+
+p, ul, ol, pre, table {
+	margin: 0px 0px $lineHeight;
+}
+
+p {
+	@include hyphens;
+}
+
+ul, ol {
+	& & {
+		margin-bottom: 0px;
+	}
+}
+
+pre {
+	@include box-sizing(border-box);
+	
+	font-family: $fontCode;
+	padding: $rythm;
+	border: 1px solid #999999;
+	background: rgba(0, 0, 0, .02);
+}
+
+table {
+	border-spacing: 0px;
+	width: 100%;
+	
+	th, td {
+		text-align: left;
+		padding: .25 * $rythm $rythm;
+		vertical-align: top;
+	}
+	
+	tbody tr:nth-child(odd) td {
+		background: #f0f0f0;
+	}
+}
+
+a {
+	color: inherit;
+	outline: none;
+	
+	&:hover, &:active, &:focus {
+		opacity: .8;
+	}
+}
+
+nav {
+	margin-bottom: $lineHeight;
+	
+	a {
+		display: block;
+		text-decoration: none;
+		margin: 0px -1 * $rythm;
+		padding: .25 * $rythm $rythm;
+		
+		&:hover, &:active, &:focus {
+			opacity: 1;
+			background: rgba(0, 0, 0, .05);
+		}
+		
+		&.active {
+			&::before {
+				content: "» ";
+			}
+		}
+	}
+}
+
+#sidebar {
+	@include box-sizing(border-box);
+	
+	width: $navWidth;
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	padding: $rythm;
+	background: #f0f0f0;
+	
+	footer {
+		position: absolute;
+		left: $rythm;
+		right: $rythm;
+		bottom: $rythm;
+	}
+}
+
+#content {
+	@include box-sizing(border-box);
+	
+	margin-left: $navWidth;
+	max-width: 640px;
+	padding: $rythm;
+}

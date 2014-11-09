@@ -1,0 +1,3 @@
+@function grayScale($factor) {
+	@return mix($colorLightGray, $colorDarkGray, $factor);
+}
