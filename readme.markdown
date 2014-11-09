@@ -37,11 +37,11 @@ Build your website structure on the file system
 
 In the default setup of Cmd, your content will be stored in the content folder.
 
- * **admin**: In this folder, the backend styles are stores. Basically, you do not have to worry about it.
- * **css** and **img**: These folders are exactly what they sound like. You can store css and image files in there. Notice that you have to place an .htaccess file in every of these folders that you want to be publicly accessible. By the way, you can more folders, for example pdf.
- * **layouts**: Here you can store multiple layouts that you can choose in your content files. Right now there is only the default.tpl, which is used by default.
- * **pages**: In this folder, you build your website structure.
- * **scss**: The scss folder is just there because I compiled the css of the default theme with [Compass][2]. Feel free to remove it.
+ * **admin/**: In this folder, the backend styles are stores. Basically, you do not have to worry about it.
+ * **css/** and **img/**: These folders are exactly what they sound like. You can store css and image files in there. Notice that you have to place an .htaccess file in every of these folders that you want to be publicly accessible. By the way, you can more folders, for example pdf.
+ * **layouts/**: Here you can store multiple layouts that you can choose in your content files. Right now there is only the default.tpl, which is used by default.
+ * **pages/**: In this folder, you build your website structure.
+ * **scss/**: The scss folder is just there because I compiled the css of the default theme with [Compass][2]. Feel free to remove it.
 
 The most important folder is the pages folder. Here you will store your content. Your website's structure will consist of folders and files, the files all ending on ".markdown".
 
@@ -76,7 +76,7 @@ In this example, your navigation would look like this:
 
 Notice that index files never appear in the navigation and must not be prepended with an integer.
 
-To include the navigation in a layout or page, simply place "&#123;Navigation&#125;" inside it. This will render the navigation at that position. To remove the home link from the navigation, write "&#123;Navigation|home:false&#125;".
+To include the navigation in a layout or page, simply place "{Navigation}" inside it. This will render the navigation at that position. To remove the home link from the navigation, write "{Navigation|home:false}".
 
 At the beginning of each page file, you can add a comment with meta information about the page, for example:
 
@@ -104,16 +104,16 @@ A layout is basically a html file. This is a very simple layout file:
     <!DOCTYPE html>
     <html>
     <head>
-        &#123;Head&#125;
+        {Head}
     </head>
     <body>
-        &#123;Navigation&#125;
-        &#123;Content&#125;
-        &#123;Foot&#125;
+        {Navigation}
+        {Content}
+        {Foot}
     </body>
     </html>
 
-Notice the placeholders "&#123;Head&#125;", "&#123;Content&#125;" and "&#123;Foot&#125;"! These are required so Cmd can insert the content, stylesheets, scripts and meta information.
+Notice the placeholders "{Head}", "{Content}" and "{Foot}"! These are required so Cmd can insert the content, stylesheets, scripts and meta information.
 
 But basically, you can put any HTML around those placeholders, whatever you need for your layout.
 
