@@ -140,6 +140,36 @@ Additionally, you can add stylesheets and scripts to the layout. For that, use t
 That is about all there is to tell about managing content with Content MarkDown. Go ahead and edit this page to contain your own content!
 
 
+Displaying images
+-----------------
+
+You can place images anywhere in your content through the markdown syntax.
+
+    ![Alt text](/content/img/path/to/img.jpg "Optional title")
+
+Additionally, ContentMarkDown comes with a simple way to scale, crop, grayscale and even tint your images without ever touching the original image on the server. Simply prepend the path to AutoImg and your configuration to the image url:
+
+    ![Alt text](/content/autoimg/index.php?p=w500-h500/img/path/to/img.jpg "Optional title")
+
+The configuration parameters in this case are w500 and h500, which means that AutoImg will resize your image to a maximum width and height of 500 pixels. The ratio of the image is not changed, you might end up with an image of 500x180px or 350x500px, depending on the original ratio. But neither width nor height will be bigger than 500 pixels.
+
+To crop the image to the exact specified ratio, add the parameter c:
+
+    ![Alt text](/content/autoimg/index.php?p=w500-h500-c/img/path/to/img.jpg "Optional title")
+
+Your image will now be 500x500px big. Notice that cropping obviously only works when both width and height are specified.
+
+To grayscale the image, add the g parameter, for example (this time without caring about the size):
+
+    ![Alt text](/content/autoimg/index.php?p=g/img/path/to/img.jpg "Optional title")
+
+To tint your image with a certain color, use the t parameter with a hex color, omitting the #:
+
+    ![Alt text](/content/autoimg/index.php?p=tff0000/img/path/to/img.jpg "Optional title")
+
+Notice that all these parameters are combinable.
+
+
 User management
 ---------------
 
@@ -151,7 +181,7 @@ Right now, there is not user management in the backend, but it will be added soo
 License
 -------
 
-Cmd is released under the [MIT License][3].
+Content MarkDown is released under the [MIT License][3].
 
 
 

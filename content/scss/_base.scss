@@ -2,7 +2,7 @@
 
 body {
 	margin: 0px;
-	padding: 0px;
+	padding: $rythm $rythm $rythm $rythm + $navWidth;
 	font-size: 16px;
 	line-height: $lineHeight;
 	font-family: $fontText;
@@ -58,6 +58,7 @@ pre {
 	padding: $rythm;
 	border: 1px solid #999999;
 	background: rgba(0, 0, 0, .02);
+	overflow-x: scroll;
 }
 
 table {
@@ -126,9 +127,33 @@ nav {
 }
 
 #content {
-	@include box-sizing(border-box);
-	
-	margin-left: $navWidth;
 	max-width: 640px;
-	padding: $rythm;
+}
+
+ul.changelog {
+	&, li {
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	li {
+		padding-left: $rythm;
+		position: relative;
+		
+		&::before {
+			content: "*";
+			position: absolute;
+			left: .25 * $rythm;
+			top: 0px;
+		}
+		
+		&.added::before {
+			content: "+";
+		}
+		
+		&.removed::before {
+			content: "-";
+		}
+	}
 }
