@@ -16,7 +16,7 @@ function box(content, buttons) {
 					var result = callback();
 					
 					if(typeof(result) == 'undefined' || result !== false) {
-						lightboxClose();
+						$.lightbox.close();
 					}
 				});
 			})(callback);
@@ -24,11 +24,13 @@ function box(content, buttons) {
 	} else {
 		$dialogue.find('.buttonbar').append('<button type="button">OK</button>');
 		$dialogue.find('.buttonbar button').click(function() {
-			lightboxClose();
+			$.lightbox.close();
 		});
 	}
 	
-	lightboxOpen($dialogue);
+	$.lightbox.open($dialogue, {
+		type: 'html'
+	});
 	
 	$('.box').find('input, textarea').eq(0).focus();
 }

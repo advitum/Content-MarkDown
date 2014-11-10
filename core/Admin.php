@@ -30,7 +30,7 @@
 			
 			Admin::addScript('jquery', '/content/admin/js/jquery-1.11.1.min.js');
 			Admin::addScript('textarea', '/content/admin/js/jquery.textarea.min.js', array('jquery'));
-			Admin::addScript('lightbox', '/content/admin/js/lightbox.js', array('jquery'));
+			Admin::addScript('lightbox', '/content/admin/js/jquery.lightbox.js', array('jquery'));
 			Admin::addScript('box', '/content/admin/js/box.js', array('jquery', 'lightbox'));
 			Admin::addScript('contextmenu', '/content/admin/js/contextmenu.js', array('jquery'));
 			Admin::addScript('admin', '/content/admin/js/admin.js', array('jquery', 'textarea', 'lightbox', 'box', 'contextmenu'));

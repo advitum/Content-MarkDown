@@ -27,16 +27,18 @@
 		}
 		
 		private function __construct($markdown) {
-			$this->markdown = $markdown;
+			$bom = pack('H*','EFBBBF');
+			$this->markdown = preg_replace("/^" . $bom . "/", '', $markdown);
 			
 			$matches = array();
-			if(preg_match('/^(.*?\/\*\*\s*\R(?P<header>(\s+\*\s+[^\R]+\s+\R)+)\s+\*\/\s*\R)?(?P<markdown>.+)$/s', $this->markdown, $matches)) {
+			if(preg_match('/^(.*?\/\*\*\s+(?P<header>(\*.*?\s+)+?)\*\/\s+)?(?P<markdown>.+)$/us', $this->markdown, $matches)) {
 				$this->markdown = $matches['markdown'];
 				
 				$header = explode("\n", $matches['header']);
 				foreach($header as $line) {
 					if($line != '') {
-						$line = explode(': ', substr($line, 3), 2);
+						$line = preg_replace('/^\s*\*\s*/', '', $line);
+						$line = explode(': ', trim($line), 2);
 						if(count($line) == 2) {
 							$this->header[$line[0]] = $line[1];
 						}

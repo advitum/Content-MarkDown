@@ -17,10 +17,9 @@
 	define('PAGES_PATH', CONTENT_PATH . 'pages' . DS);
 	
 	define('ROOT_URL', '/');
-	define('CSS_URL', ROOT_URL . 'content/css/');
-	define('JS_URL', ROOT_URL . 'content/js/');
-	define('MEDIA_URL', ROOT_URL . 'content/media/');
-	define('PLUGINS_URL', ROOT_URL . 'plugins/');
+	define('CONTENT_URL', ROOT_URL . 'content/');
+	define('CSS_URL', CONTENT_URL . 'css/');
+	define('JS_URL', CONTENT_URL . 'js/');
 	
 	spl_autoload_register(function($class) {
 		if(substr($class, 0, strlen(__NAMESPACE__)) == __NAMESPACE__) {
@@ -31,6 +30,7 @@
 		}
 	});
 	
+	require_once(CORE_PATH . 'functions.php');
 	require_once(CONTENT_PATH . 'config.php');
 	Router::init();
 	
