@@ -41,15 +41,15 @@
 				$tableAttributes['id'] = $tableOptions['id'];
 			}
 			
-			$html = '<table' . self::htmlAttributes($tableAttributes) . '><thead>' . $heading . '</thead><tbody>';
+			$html = '<table' . self::attributes($tableAttributes) . '><thead>' . $heading . '</thead><tbody>';
 			
 			foreach($rows as $row) {
 				$html .= '<tr>';
 				foreach($columns as $column => $options) {
 					$value = '';
 					
-					if($options['callback'] !== false) {
-						$value = $options['callback']($row);
+					if($options['callback'] !== false && is_callable($options['callback'])) {
+						$value = call_user_func($options['callback'], $row);
 					} elseif(isset($row->{$column})) {
 						$value = htmlspecialchars($row->{$column});
 						
@@ -63,7 +63,7 @@
 						$cellAttributes['class'] = $options['class'];
 					}
 					
-					$html .= '<td' . self::htmlAttributes($cellAttributes) . '>' . $value . '</td>';
+					$html .= '<td' . self::attributes($cellAttributes) . '>' . $value . '</td>';
 				}
 				$html .= '</tr>';
 			}

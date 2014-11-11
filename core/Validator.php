@@ -2,6 +2,8 @@
 	
 	namespace Advitum\Cmd;
 	
+	require_once('ValidationRules.php');
+	
 	class Validator
 	{
 		public static $errors = array();
@@ -10,8 +12,7 @@
 			self::$errors[$form] = array();
 			
 			$defaultOptions = array(
-				'file' => false,
-				'required' => true,
+				'rules' => 'notEmpty',
 				'message' => 'Please input something in field %s.'
 			);
 			
@@ -24,21 +25,30 @@
 				$options = array_merge($defaultOptions, $options);
 				$error = false;
 				
-				if($options['file'] == false) {
-					$value = false;
-					
-					if(isset($_GET[$form][$field])) {
-						$value = $_GET[$form][$field];
+				$value = false;
+				
+				if(isset($_POST[$form][$field])) {
+					$value = $_POST[$form][$field];
+				} elseif(isset($_GET[$form][$field])) {
+					$value = $_GET[$form][$field];
+				} elseif(isset($_FILES[$field])) {
+					$value = $_FILES[$field];
+				}
+				
+				if(!is_array($options['rules'])) {
+					$options['rules'] = array($options['rules']);
+				}
+				
+				foreach($options['rules'] as $rule) {
+					if(is_string($rule)) {
+						$rule = '\Advitum\Cmd\ValidationRules::' . $rule;
 					}
-					if(isset($_POST[$form][$field])) {
-						$value = $_POST[$form][$field];
+					if(is_callable($rule)) {
+						$error = !call_user_func($rule, $value);
+						if($error) {
+							break;
+						}
 					}
-					
-					if($options['required'] && ($value === false || (empty($value) && $value !== 0))) {
-						$error = true;
-					}
-				} else {
-					
 				}
 				
 				if($error) {

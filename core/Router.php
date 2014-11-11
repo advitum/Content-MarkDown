@@ -15,8 +15,7 @@
 			$url = self::sanitize($dirty);
 			
 			if($url !== $dirty) {
-				header('Location: ' . $url);
-				exit;
+				Router::redirect($url);
 			}
 			
 			DB::connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_DATABASE);
@@ -31,6 +30,11 @@
 			} else {
 				self::render($url);
 			}
+		}
+		
+		public static function redirect($url) {
+			header('Location: ' . $url);
+			exit();
 		}
 		
 		public static function ls($folder) {

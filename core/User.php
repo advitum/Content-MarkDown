@@ -4,6 +4,35 @@
 	
 	class User
 	{
+		public static function create($username, $password) {
+			if(DB::count(sprintf("SELECT COUNT(*) FROM `users` WHERE `username` = '%s'", DB::escape($username))) == 0) {
+				DB::insert('users', array(
+					'username' => $username,
+					'password' => self::generateHash($password),
+					'`created` = NOW()'
+				));
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public static function update($id, $username, $password) {
+			if(DB::count(sprintf("SELECT COUNT(*) FROM `users` WHERE `username` = '%s'", DB::escape($username)))) {
+				DB::update('users', array(
+					'username' => $username,
+					'password' => self::generateHash($password)
+				), sprintf("WHERE id = %d", DB::escape($id)));
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public static function delete($id) {
+			DB::delete('users', sprintf("WHERE id = %d", DB::escape($id)));
+		}
+		
 		public static function get() {
 			$user = null;
 			

@@ -53,17 +53,25 @@
 			
 			$options = array_merge($defaultOptions, $options);
 			$error = Validator::error(self::$form, $name);
-			if($error !== false) {
-				$options['class'] .= ' error';
-			}
-			
-			$value = ($options['type'] == 'password' ? false : (isset($_POST[self::$form][$name]) ? $_POST[self::$form][$name] : $options['default']));
+			$value = ($options['type'] == 'password' || $options['type'] == 'file' ? false : (self::value(self::$form, $name) ? self::value(self::$form, $name) : $options['default']));
 			
 			$html = '';
 			
 			if($options['div']) {
-				$html .= '<div class="input">';
+				$html .= '<div class="input' . ($error !== false ? ' error' : '') . '">';
 			}
+			
+			if($error !== false) {
+				$html .= '<div class="message error">' . htmlspecialchars($error) . '</div>';
+				$options['class'] .= ' error';
+			}
+			
+			$attributes = $options;
+			unset($attributes['type']);
+			unset($attributes['label']);
+			unset($attributes['default']);
+			unset($attributes['div']);
+			$attributes['name'] = self::$form . '[' . $name . ']';
 			
 			switch($options['type']) {
 				case 'textarea':
@@ -71,11 +79,7 @@
 						$html .= '<label for="' . htmlspecialchars($options['id']) . '">' . htmlspecialchars($options['label']) . '</label>';
 					}
 					
-					$html .= '<textarea ' . self::attrs(array(
-						'id' => $options['id'],
-						'name' => self::$form . '[' . $name . ']',
-						'class' => $options['class']
-					)) . '>' . htmlspecialchars($value) . '</textarea>';
+					$html .= '<textarea ' . self::attrs($attributes) . '>' . htmlspecialchars($value) . '</textarea>';
 					
 					break;
 				default:
@@ -83,17 +87,10 @@
 						$html .= '<label for="' . htmlspecialchars($options['id']) . '">' . htmlspecialchars($options['label']) . '</label>';
 					}
 					
-					$html .= '<input ' . self::attrs(array(
-						'type' => $options['type'],
-						'id' => $options['id'],
-						'name' => self::$form . '[' . $name . ']',
-						'class' => $options['class'],
-						'value' => $value
-					)) . ' />';
+					$attributes['type'] = $options['type'];
+					$attributes['value'] = $value;
+					$html .= '<input ' . self::attrs($attributes) . ' />';
 					
-					if($error !== false) {
-						$html .= '<div class="message error">' . htmlspecialchars($error) . '</div>';
-					}
 					break;
 			}
 			
@@ -134,6 +131,20 @@
 		
 		public static function sent($name) {
 			return isset($_POST['_form']) && $_POST['_form'] == $name;
+		}
+		
+		public static function value($form, $name) {
+			$value = false;
+			
+			if(isset($_POST[$form][$name])) {
+				$value = $_POST[$form][$name];
+			} elseif(isset($_GET[$form][$name])) {
+				$value = $_GET[$form][$name];
+			} elseif(isset($_FILES[$name])) {
+				$value = $_FILES[$name];
+			}
+			
+			return $value;
 		}
 		
 		private static function attrs($attrs) {

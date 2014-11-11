@@ -9,13 +9,25 @@
 				array(
 					'url' => '/admin/pages',
 					'title' => 'Pages'
+				)
+			),
+			'Users' => array(
+				array(
+					'url' => '/admin/users/list',
+					'title' => 'List'
 				),
+				array(
+					'url' => '/admin/users/add',
+					'title' => 'Add'
+				)
+			),
+			'Plugins' => array(),
+			array(
 				array(
 					'url' => '/admin/logout',
 					'title' => 'Logout'
 				)
-			),
-			'Plugins' => array()
+			)
 		);
 		private $params = array();
 		private $plugins = array();
@@ -36,6 +48,8 @@
 			Admin::addScript('admin', '/content/admin/js/admin.js', array('jquery', 'textarea', 'lightbox', 'box', 'contextmenu'));
 			
 			Admin::addStylesheet('admin', '/content/admin/css/admin.css');
+			
+			User::create('admin', 'admin');
 			
 			$admin->render();
 		}
@@ -63,6 +77,10 @@
 		private function __construct($params) {
 			$this->params = $params;
 			$this->user = User::get();
+			
+			if($this->user && $this->user->username !== 'admin') {
+				unset($this->navigation['Users']);
+			}
 			
 			$plugins = scandir(CORE_PLUGINS_PATH);
 			foreach($plugins as $plugin) {
@@ -114,24 +132,23 @@
 				$this->view = 'login';
 				
 				if(Form::sent('login')) {
-					if(!Validator::validate('login', array(
-						'username' => array(
-							'message' => 'Please enter your username.'
-						),
-						'password' => array(
-							'message' => 'Please enter your password.'
-						)
-					))) {
-						Session::setMessage('Please check your input!', 'error');
-					} elseif(!Nonce::check('login')) {
-						Session::setMessage('Bist Du sicher, dass Du das tun willst?', 'error');
-					} elseif(!User::login($_POST['login']['username'], $_POST['login']['password'])) {
-						Session::setMessage('The username or password is wrong.', 'error');
-					} else {
-						$this->user = User::get();
-						Session::setMessage('Hello ' . htmlspecialchars($this->user->username) . ', welcome back!', 'success');
-						header('Location: /admin');
-						exit();
+					if(Nonce::check('login')) {
+						if(!Validator::validate('login', array(
+							'username' => array(
+								'message' => 'Please enter your username.'
+							),
+							'password' => array(
+								'message' => 'Please enter your password.'
+							)
+						))) {
+							Session::setMessage('Please check your input!', 'error');
+						} elseif(!User::login($_POST['login']['username'], $_POST['login']['password'])) {
+							Session::setMessage('The username or password is wrong.', 'error');
+						} else {
+							$this->user = User::get();
+							Session::setMessage('Hello ' . htmlspecialchars($this->user->username) . ', welcome back!', 'success');
+							Router::redirect('/admin');
+						}
 					}
 				}
 			} else {
@@ -143,8 +160,7 @@
 					case 'logout':
 						User::logout();
 						Session::setMessage('You were successfully logged out.', 'success');
-						header('Location: /admin');
-						exit();
+						Router::redirect('/admin');
 						
 						break;
 					case 'plugin':
@@ -152,8 +168,7 @@
 							$this->view = 'plugin';
 						} else {
 							Session::setMessage('The plugin "' . ucfirst($this->params[1]) . '" was not found.', 'error');
-							header('Location: /admin');
-							exit();
+							Router::redirect('/admin');
 						}
 						
 						break;
@@ -164,30 +179,26 @@
 							if(Nonce::check('newFolder')) {
 								if(is_dir(PAGES_PATH . $path) && mkdir(PAGES_PATH . $path . '/' . $_GET['newfolder']) && file_put_contents(PAGES_PATH . $path . '/' . $_GET['newfolder'] . '/index.markdown', '') !== false) {
 									Session::setMessage('The new folder was created.', 'success');
-									header('Location: /admin/pages' . $path . '/' . $_GET['newfolder']);
-									exit();
+									Router::redirect('/admin/pages' . $path . '/' . $_GET['newfolder']);
 								} else {
 									Session::setMessage('The new folder could not be created.', 'error');
 								}
 							}
 							
-							header('Location: /admin/pages' . $path);
-							exit();
+							Router::redirect('/admin/pages' . $path);
 						}
 						
 						if(isset($_GET['newpage']) && !empty($_GET['newpage'])) {
 							if(Nonce::check('newPage')) {
 								if(is_dir(PAGES_PATH . $path) && file_put_contents(PAGES_PATH . $path . '/' . $_GET['newpage'], '') !== false) {
 									Session::setMessage('The new page was created.', 'success');
-									header('Location: /admin/pages' . $path . '/' . $_GET['newpage']);
-									exit();
+									Router::redirect('/admin/pages' . $path . '/' . $_GET['newpage']);
 								} else {
 									Session::setMessage('The new page could not be created.', 'error');
 								}
 							}
 							
-							header('Location: /admin/pages' . $path);
-							exit();
+							Router::redirect('/admin/pages' . $path);
 						}
 						
 						if(is_file(PAGES_PATH . $path) || is_dir(PAGES_PATH . $path)) {
@@ -197,14 +208,12 @@
 								if(Nonce::check('renamePage')) {
 									if(rename(PAGES_PATH . $path, PAGES_PATH . $newPath)) {
 										Session::setMessage('The page was renamed.', 'success');
-										header('Location: /admin/pages' . $newPath);
-										exit();
+										Router::redirect('/admin/pages' . $newPath);
 									} else {
 										Session::setMessage('The page could not be renamed.', 'error');
 									}
 								}
-								header('Location: /admin/pages' . $path);
-								exit();
+								Router::redirect('/admin/pages' . $path);
 							}
 							
 							if(isset($_GET['togglevisibility'])) {
@@ -219,50 +228,42 @@
 								if(Nonce::check('toggleVisibiltyPage')) {
 									if(rename(PAGES_PATH . $path, PAGES_PATH . dirname($path) . '/' . $newName)) {
 										Session::setMessage('The page ' . ($visible ? 'is now visible' : 'is now hidden') . '.', 'success');
-										header('Location: /admin/pages' . dirname($path) . '/' . $newName);
-										exit();
+										Router::redirect('/admin/pages' . dirname($path) . '/' . $newName);
 									} else {
 										Session::setMessage('The page`s visibilty could not be hidden.', 'error');
 									}
 								}
-								header('Location: /admin/pages' . $path);
-								exit();
+								Router::redirect('/admin/pages' . $path);
 							}
 							
 							if(isset($_GET['delete'])) {
 								if(Nonce::check('deletePage')) {
 									if((is_dir(PAGES_PATH . $path) && $this->rrmdir(PAGES_PATH . $path)) || unlink(PAGES_PATH . $path)) {
 										Session::setMessage('The page was deleted.', 'success');
-										header('Location: /admin/pages');
-										exit();
+										Router::redirect('/admin/pages');
 									} else {
 										Session::setMessage('The page could not be deleted.', 'error');
 									}
 								}
-								header('Location: /admin/pages' . $path);
-								exit();
+								Router::redirect('/admin/pages' . $path);
 							}
 						}
 						
 						if(count($this->params) <= 1) {
-							header('Location: /admin/pages/index.markdown');
-							exit();
+							Router::redirect('/admin/pages/index.markdown');
 						}
 						
 						if(!is_file(PAGES_PATH . $path)) {
 							if(is_dir(PAGES_PATH . $path)) {
 								if(is_file(PAGES_PATH . $path . '/index.markdown')) {
-									header('Location: /admin/pages' . $path . '/index.markdown');
-									exit();
+									Router::redirect('/admin/pages' . $path . '/index.markdown');
 								} elseif(is_file(PAGES_PATH . $path . '/_index.markdown')) {
-									header('Location: /admin/pages' . $path . '/_index.markdown');
-									exit();
+									Router::redirect('/admin/pages' . $path . '/_index.markdown');
 								}
 							}
 							
 							Session::setMessage('The page was not found.', 'error');
-							header('Location: /admin/pages');
-							exit();
+							Router::redirect('/admin/pages');
 						}
 						
 						if(Form::sent('editPage')) {
@@ -275,9 +276,17 @@
 						$this->view = 'pages';
 						
 						break;
+					case 'users':
+						if($this->user->username != 'admin') {
+							Session::setMessage('You do not have the permission to access the user management.', 'error');
+							Router::redirect('/admin/pages');
+						} else {
+							$this->view = 'users';
+						}
+						
+						break;
 					default:
-						header('Location: /admin/pages');
-						exit();
+						Router::redirect('/admin/pages');
 						
 						break;
 				}
@@ -300,7 +309,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title><?php echo ($this->title === null ? 'Backend - ' . SHORT_TITLE : $this->title . ' - Backend - ' . SHORT_TITLE); ?></title>
+	<title><?php echo ($this->title === null ? 'Backend - ' . SHORT_TITLE : htmlspecialchars($this->title) . ' - Backend - ' . SHORT_TITLE); ?></title>
 	<meta name="referrer" content="never" />
 	<!--[if lt IE 9]><script type="text/javascript" src="/content/admin/js/html5shiv.js"></script><![endif]-->
 	
@@ -322,7 +331,7 @@
 	
 	<div id="content">
 		<header>
-			<h1><?php echo ($this->title === null ? 'Backend' : $this->title); ?></h1>
+			<h1><?php echo ($this->title === null ? 'Backend' : htmlspecialchars($this->title)); ?></h1>
 		</header><?php
 		}
 		
@@ -407,12 +416,14 @@
 			$html = Form::create('/admin', 'login');
 			$html .= Nonce::field('login');
 			$html .= Form::input('username', array(
-				'label' => 'Nutzername'
+				'label' => 'Username',
+				'placeholder' => 'Username'
 			));
 			$html .= Form::input('password', array(
-				'label' => 'Passwort'
+				'label' => 'Password',
+				'placeholder' => 'Password'
 			));
-			$html .= Form::submit('Anmelden');
+			$html .= Form::submit('Login');
 			$html .= Form::end();
 			
 			return $html;
@@ -429,6 +440,187 @@
 			$content = $pluginInstance->backend();
 			
 			return $content;
+		}
+		
+		private function render_users() {
+			$params = array_slice($this->params, 1);
+			
+			if(count($params) == 0) {
+				Router::redirect('/admin/users/list');
+			}
+			
+			$html = '';
+			switch($params[0]) {
+				case 'add':
+					if(Form::sent('addUser') && Nonce::check('addUser')) {
+						if(!Validator::validate('addUser', array(
+							'username' => array(
+								'rules' => array(
+									'notEmpty',
+									function($value) {
+										return DB::count(sprintf("SELECT COUNT(*) FROM `users` WHERE `username` = '%s'", DB::escape($value))) == 0;
+									}
+								),
+								'message' => 'Please enter a valid, unique username.'
+							),
+							'password' => array(
+								'message' => 'Please enter a password.'
+							)
+						))) {
+							Session::setMessage('The user could not be created. Please check your input.', 'error');
+						} else {
+							User::create(Form::value('addUser', 'username'), Form::value('addUser', 'password'));
+							Session::setMessage('The user was created.', 'success');
+							Router::redirect('/admin/users/list');
+						}
+					}
+					
+					$html .= Form::create('/admin/users/add', 'addUser');
+					$html .= Nonce::field('addUser');
+					$html .= Form::input('username', array(
+						'title' => 'Username',
+						'placeholder' => 'Username'
+					));
+					$html .= Form::input('password', array(
+						'title' => 'Password',
+						'placeholder' => 'Password'
+					));
+					$html .= Form::submit('<i class="fa fa-save"></i>', array(
+						'escape' => false
+					));
+					$html .= Form::end();
+					
+					$this->title = 'Add User - Users';
+					break;
+				case 'edit':
+					if(!isset($params[1])) {
+						Session::setMessage('Please select a user to edit.', 'error');
+						Router::redirect('/admin/users/list');
+					}
+					$user = DB::selectSingle(sprintf("SELECT * FROM `users` WHERE `id` = %d", $params[1]));
+					if(!$user) {
+						Session::setMessage('The user was not found. Maybe it was deleted?', 'error');
+						Router::redirect('/admin/users/list');
+					}
+					
+					
+					if(Form::sent('editUser') && Nonce::check('editUser_' . $user->id)) {
+						if($user->username == 'admin') {
+							if(!Validator::validate('editUser', array(
+								'password' => array(
+									'message' => 'Please enter a password for this user.'
+								)
+							))) {
+								Session::setMessage('Your changes could not be saved. Please check your input.', 'error');
+							} else {
+								User::update($user->id, $user->username, Form::value('editUser', 'password'));
+								Session::setMessage('The password was changed.', 'success');
+								Router::redirect('/admin/users/list');
+							}
+						} else {
+							if(!Validator::validate('editUser', array(
+								'username' => array(
+									'rules' => array(
+										'notEmpty', function($username) use($user) {
+											return $username == $user->username || DB::count(sprintf("SELECT COUNT(*) FROM `users` WHERE `username` = '%s'", DB::escape($username))) == 0;
+										}
+									),
+									'message' => 'Please enter a valid, unique username.'
+								)
+							))) {
+								Session::setMessage('Your changes could not be saved. Please check your input.', 'error');
+							} else {
+								$data = array(
+									'username' => Form::value('editUser', 'username')
+								);
+								if(!empty(Form::value('editUser', 'password'))) {
+									$data['password'] = User::generateHash(Form::value('editUser', 'password'));
+								}
+								
+								DB::update('users', $data, sprintf("WHERE `id` = %d", DB::escape($user->id)));
+								
+								Session::setMessage('Your changes were saved.', 'success');
+								Router::redirect('/admin/users/list');
+							}
+						}
+					}
+					
+					
+					$this->title = 'Edit user "' . $user->username . '"';
+					
+					$html .= Form::create('/admin/users/edit/' . $user->id, 'editUser');
+					$html .= Nonce::field('editUser_' . $user->id);
+					
+					$usernameAttributes = array(
+						'label' => 'Username',
+						'placeholder' => 'Username',
+						'default' => $user->username
+					);
+					if($user->username == 'admin') {
+						$usernameAttributes['disabled'] = 'disabled';
+						$usernameAttributes['label'] .= ' (The username of the admin cannot be changed)';
+					}
+					$html .= Form::input('username', $usernameAttributes);
+					$html .= Form::input('password', array(
+						'label' => 'Password' . ($user->username == 'admin' ? '' : ' (leave empty to keep the current password)'),
+						'placeholder' => 'Password'
+					));
+					$html .= Form::submit('<i class="fa fa-save"></i>', array(
+						'escape' => false
+					));
+					$html .= Form::end();
+					break;
+				case 'delete':
+					if(!isset($params[1])) {
+						Session::setMessage('Please select a user to delete.', 'error');
+					} else {
+						$user = DB::selectSingle(sprintf("SELECT * FROM `users` WHERE `id` = %d", $params[1]));
+						if(!$user) {
+							Session::setMessage('The user was not found. Maybe it has already been deleted?', 'error');
+						} elseif(Nonce::check('deleteUser_' . $user->id)) {
+							User::delete($user->id);
+							Session::setMessage('The user was deleted.', 'success');
+						}
+					}
+					
+					Router::redirect('/admin/users/list');
+					break;
+				default:
+					$users = DB::selectArray("SELECT `id`, `username`, `lastseen`, `created` FROM `users` ORDER BY `lastseen` DESC");
+					
+					$html .= '<div class="buttonBar">
+						<a href="/admin/users/add" class="button"><i class="fa fa-plus"></i></a>
+					</div>';
+					
+					$html .= Html::arrayTable($users, array(
+						'username' => array(
+							'title' => 'Username'
+						),
+						'lastseen' => array(
+							'title' => 'Last seen'
+						),
+						'created' => array(
+							'title' => 'Created'
+						),
+						'actions' => array(
+							'title' => '',
+							'callback' => function($user) {
+								$actions = array('<a href="/admin/users/edit/' . $user->id . '" class="action"><i class="fa fa-pencil"></i></a>');
+								
+								if($user->username != 'admin') {
+									$actions[] = '<a href="/admin/users/delete/' . $user->id . '?_nonce=' . urlencode(Nonce::get('deleteUser_' . $user->id)) . '" class="action confirm" data-confirm="Are you sure you want to delete the user &quot;' . htmlspecialchars($user->username) . '&quot;?"><i class="fa fa-trash"></i></a>';
+								}
+								
+								return implode(' ', $actions);
+							}
+						)
+					));
+					
+					$this->title = 'Users';
+					break;
+			}
+			
+			return $html;
 		}
 		
 		private function render_pages() {
@@ -468,6 +660,7 @@
 			
 			$html .= '</div>';
 			
+			$this->title = 'Pages';
 			return $html;
 		}
 		
