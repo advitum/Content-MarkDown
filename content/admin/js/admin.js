@@ -145,6 +145,20 @@ $(document).ready(function() {
 		});
 	});
 	
+	$('a.confirm').click(function(e) {
+		e.preventDefault();
+		
+		var message = $(this).data('confirm');
+		if(typeof message == 'undefined') {
+			message = 'Are you sure you want to do this?';
+		}
+		
+		var href = $(this).attr('href');
+		confirmBox(message, function() {
+			window.location.href = href;
+		});
+	});
+	
 	resize();
 });
 

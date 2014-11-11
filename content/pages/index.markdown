@@ -170,12 +170,14 @@ To tint your image with a certain color, use the t parameter with a hex color, o
 Notice that all these parameters are combinable.
 
 
-User management
----------------
+Backend
+-------
 
-Right now, there is not user management in the backend, but it will be added soon. For now, you can simply add the users manually to the database. To hash a password, you can use this function:
+You can get to the backend by navigating to the page /admin. The default admin password is "admin". You should log in right now and change the password!
 
-    Advitum\Cmd\User::generateHash('PASSWORD');
+In the backend, you can edit, create and delete folders and pages and edit, create and delete users. Note that only the admin user has access to the user management.
+
+Some plugins might present you with a backend page of their own. You can see these in the backend menu listed under "Plugins". If you can not find the plugins menu, there are simply no plugins defining any backend page.
 
 
 License

@@ -65,6 +65,16 @@
 			}
 		}
 		
+		public static function count($query) {
+			$result = self::query($query);
+			
+			if($row = $result->fetch_row()) {
+				return $row[0];
+			} else {
+				return false;
+			}
+		}
+		
 		public static function insert($table, $data) {
 			self::query("INSERT INTO " . $table . " " . self::dataArray($data));
 			return self::$db->insert_id;
@@ -72,6 +82,10 @@
 		
 		public static function update($table, $data, $where) {
 			self::query("UPDATE " . $table . " " . self::dataArray($data) . " " . $where);
+		}
+		
+		public static function delete($table, $where) {
+			self::query("DELETE FROM " . $table . " " . $where);
 		}
 		
 		public static function dataArray($data) {

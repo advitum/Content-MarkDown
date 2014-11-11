@@ -14,6 +14,25 @@ Changelog
 	</thead>
 	<tbody>
 		<tr>
+			<td>0.0.3</td>
+			<td>
+				<ul class="changelog">
+					<li class="changed">Found some labels still in German and translated to English</li>
+					<li class="changed">Extended the Validator class to support custom validation rules and rules from the ValidationRules class</li>
+					<li class="changed">Changed/Fixed backend design (form elements, buttons, form errors, default table layout)</li>
+					<li class="changed">Form::input() now renders superfluous options as html attributes</li>
+					<li class="added">Added ValidationRules class</li>
+					<li class="added">Added user management to the backend</li>
+					<li class="added">Added methods count() and delete() to DB class</li>
+					<li class="added">Added methods create(), update() and delete() to User class</li>
+					<li class="added">Added method Router::redirect()</li>
+					<li class="added">Added method Form::value()</li>
+					<li class="added">Added default backend user (admin)</li>
+					<li class="added">Added links that need confirmation (like deleting)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
 			<td>0.0.2</td>
 			<td>
 				<ul class="changelog">
