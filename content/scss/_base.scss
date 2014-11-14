@@ -165,15 +165,39 @@ form {
 				resize: vertical;
 			}
 		}
+		
+		&.error {
+			margin: -.25 * $rythm -.25 * $rythm .75 * $rythm;
+			padding: .25 * $rythm;
+			background: #f0dddd;
+			border: 1px solid #999999;
+			
+			.message.error {
+				font-weight: bold;
+				color: #991111;
+				margin: .25 * $rythm 0px .5 * $rythm;
+				/*padding: .5 * $rythm $rythm;
+				margin-bottom: $rythm;
+				border: 1px solid #999999;
+				background: #f0dddd;*/
+			}
+		}
 	}
 	
 	.submit {
 		margin-bottom: $rythm;
+		text-align: right;
 		
 		button {
 			@extend %input;
 			
 			cursor: pointer;
+			display: inline-block;
+			background: #ccf0cc;
+			
+			&:hover, &:active, &:focus {
+				background: #aaf0aa;
+			}
 		}
 	}
 }
