@@ -7,17 +7,7 @@
 		protected $params = array();
 		
 		public function __construct($params) {
-			if(is_array($params)) {
-				$this->params = $params;
-			} else {
-				$params = explode(';', $params);
-				foreach($params as $param) {
-					$param = explode(':', $param, 2);
-					if(count($param) == 2) {
-						$this->params[$param[0]] = $param[1];
-					}
-				}
-			}
+			$this->params = $params;
 		}
 		
 		public function path() {

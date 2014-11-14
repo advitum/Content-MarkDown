@@ -13,9 +13,7 @@
 			
 			$markdown = $this->header->getMarkdown();
 			
-			$markdown = $this->replacePlugins($markdown);
-			
-			$this->html = \Michelf\Markdown::defaultTransform($markdown);
+			$this->html = $this->replacePlugins(\Michelf\Markdown::defaultTransform($markdown));
 		}
 		
 		public function getHtml() {

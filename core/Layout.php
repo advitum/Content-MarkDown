@@ -19,28 +19,6 @@
 		public static function render() {
 			$html = file_get_contents(LAYOUTS_PATH . self::$layout . '.tpl');
 			
-			$html = str_replace('{Content}', self::$content, $html);
-			
-			if(strpos($html, '{Message}') !== false) {
-				$html = str_replace('{Message}', Session::getMessage(), $html);
-			}
-			
-			$html = preg_replace_callback('/{Navigation(\|(?P<params>.*))?}/', function($matches) {
-				$params = array();
-				if(isset($matches['params'])) {
-					foreach(explode(';', $matches['params']) as $param) {
-						if(trim($param) != '') {
-							$param = explode(':', $param, 2);
-							if(count($param) == 2) {
-								$params[$param[0]] = $param[1];
-							}
-						}
-					}
-				}
-				
-				return Layout::renderNavigation($params);
-			}, $html);
-			
 			if(self::$title === false) {
 				self::$title = LONG_TITLE;
 			} else {
@@ -51,11 +29,17 @@
 			self::$head[] = '<title>' . self::$title . '</title>';
 			self::$head[] = '<meta name="referrer" content="always" />';
 			
+			$html = preg_replace('/<cmd:content\s[^>]*?\/>/s', self::$content, $html);
+			
+			$html = self::replacePlugins($html);
+			
+			if(preg_match('/<cmd:message\s[^>]*\/>/s', $html)) {
+				$html = preg_replace('/<cmd:message\s[^>]*\/>/s', Session::getMessage(), $html);
+			}
+			
 			uasort(self::$stylesheets, function($a, $b) {
 				return $a['position'] < $b['position'] ? -1 : 1;
 			});
-			
-			$html = self::replacePlugins($html);
 			
 			foreach(self::$stylesheets as $id => $stylesheet) {
 				self::loadStylesheet($id);
@@ -65,10 +49,8 @@
 				self::loadScript($id);
 			}
 			
-			$html = str_replace('{Head}', implode("\n", self::$head), $html);
-			$html = str_replace('{Foot}', implode("\n", self::$foot), $html);
-			
-			$html = str_replace(array('&amp;#123;', '&amp;#125;'), array('{', '}'), $html);
+			$html = preg_replace('/<cmd:head\s+[^>]*\/>/s', implode("\n", self::$head), $html);
+			$html = preg_replace('/<cmd:foot\s+[^>]*\/>/s', implode("\n", self::$foot), $html);
 			
 			echo $html;
 		}

@@ -80,7 +80,7 @@ In this example, your navigation would look like this:
 
 Notice that index files never appear in the navigation and must not be prepended with an integer.
 
-To include the navigation in a layout or page, simply place "&#123;Navigation&#125;" inside it. This will render the navigation at that position. To remove the home link from the navigation, write "&#123;Navigation|home:false&#125;".
+To include the navigation in a layout or page, simply place &lt;cmd:navigation \&gt; inside it. This will render the navigation at that position. To remove the home link from the navigation, write &lt;cmd:navigation home="false" /&gt;.
 
 At the beginning of each page file, you can add a comment with meta information about the page, for example:
 
@@ -108,16 +108,21 @@ A layout is basically a html file. This is a very simple layout file:
     <!DOCTYPE html>
     <html>
     <head>
-        &#123;Head&#125;
+        <cmd:head />
     </head>
     <body>
-        &#123;Navigation&#125;
-        &#123;Content&#125;
-        &#123;Foot&#125;
+        <cmd:navigation />
+        
+        <cmd:message />
+        <cmd:content />
+        
+        <cmd:foot />
     </body>
     </html>
 
-Notice the placeholders "&#123;Head&#125;", "&#123;Content&#125;" and "&#123;Foot&#125;"! These are required so Cmd can insert the content, stylesheets, scripts and meta information.
+Notice the tags <cmd:head />, <cmd:foot /> and <cmd:content />! These are required so Cmd can insert the content, stylesheets, scripts and meta information.
+
+Additionally, you may place the tags <cmd:message /> and <cmd:navigation /> and <cmd:plugin /> inside the layout.
 
 But basically, you can put any HTML around those placeholders, whatever you need for your layout.
 
