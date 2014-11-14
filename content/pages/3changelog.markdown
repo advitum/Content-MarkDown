@@ -14,6 +14,20 @@ Changelog
 	</thead>
 	<tbody>
 		<tr>
+			<td>0.0.4</td>
+			<td>
+				<ul class="changelog">
+					<li class="changed">Enhanced the preview function in the backend. The preview link will now only be displayed, if the page is accessable.</li>
+					<li class="changed">Changed the backend and frontend layout to allow for a bigger sidebar and multipe navigation layers.</li>
+					<li class="changed">Session::printMessage() was renamed to Session::getMessage() and now returns the message instead of displaying it.</li>
+					<li class="added">Added form and error styles for the frontend layout.</li>
+					<li class="added">Added a contact form plugin.</li>
+					<li class="added">Added the method Router::here() to return the current pages url</li>
+					<li class="added">Added a proper display of the 404 error</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
 			<td>0.0.3</td>
 			<td>
 				<ul class="changelog">

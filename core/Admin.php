@@ -323,20 +323,25 @@
 </head>
 
 <body>
-	<?php Session::printMessage(); ?>
+	<?php echo Session::getMessage(); ?>
 	
-	<?php if($this->user !== null) { ?><nav id="main">
-		<?php $this->navigation(); ?>
-	</nav><?php } ?>
-	
-	<div id="content">
+	<div id="sidebar">
 		<header>
-			<h1><?php echo ($this->title === null ? 'Backend' : htmlspecialchars($this->title)); ?></h1>
-		</header><?php
+			Content MarkDown
+		</header>
+		<?php if($this->user !== null) { ?><nav>
+			<?php $this->navigation(); ?>
+		</nav><?php } ?>
+		<footer>
+			<p><a href="https://github.com/advitum/Content-MarkDown">Content MarkDown</a> is released under the <a href="http://opensource.org/licenses/MIT" title="MIT License">MIT License</a>.</p>
+		</footer>
+	</div>
+	
+	<h1><?php echo ($this->title === null ? 'Backend' : htmlspecialchars($this->title)); ?></h1><?php
 		}
 		
 		private function footer() {
-?></div>
+?>
 	
 	<?php
 		
@@ -417,7 +422,8 @@
 			$html .= Nonce::field('login');
 			$html .= Form::input('username', array(
 				'label' => 'Username',
-				'placeholder' => 'Username'
+				'placeholder' => 'Username',
+				'autofocus' => 'autofocus'
 			));
 			$html .= Form::input('password', array(
 				'label' => 'Password',
@@ -479,7 +485,8 @@
 					$html .= Nonce::field('addUser');
 					$html .= Form::input('username', array(
 						'title' => 'Username',
-						'placeholder' => 'Username'
+						'placeholder' => 'Username',
+						'autofocus' => 'autofocus'
 					));
 					$html .= Form::input('password', array(
 						'title' => 'Password',
@@ -556,15 +563,21 @@
 						'placeholder' => 'Username',
 						'default' => $user->username
 					);
+					$passwordAttributes = array(
+						'label' => 'Password',
+						'placeholder' => 'Password'
+					);
 					if($user->username == 'admin') {
 						$usernameAttributes['disabled'] = 'disabled';
 						$usernameAttributes['label'] .= ' (The username of the admin cannot be changed)';
+						$passwordAttributes['autofocus'] = 'autofocus';
+					} else {
+						$usernameAttributes['autofocus'] = 'autofocus';
+						$passwordAttributes['label'] .= ' (leave empty to keep the current password)';
 					}
+					
 					$html .= Form::input('username', $usernameAttributes);
-					$html .= Form::input('password', array(
-						'label' => 'Password' . ($user->username == 'admin' ? '' : ' (leave empty to keep the current password)'),
-						'placeholder' => 'Password'
-					));
+					$html .= Form::input('password', $passwordAttributes);
 					$html .= Form::submit('<i class="fa fa-save"></i>', array(
 						'escape' => false
 					));
@@ -634,8 +647,8 @@
 	};
 </script>
 <div id="tree">
-	<button id="newFolder"><span class="fa fa-stack"><i class="fa fa-folder fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span></button>
-	<button id="newPage"><span class="fa fa-stack"><i class="fa fa-file fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span></button>';
+	<button id="newFolder"><i class="fa fa-folder"></i><i class="fa fa-plus fa-small fa-invert"></i></button>
+	<button id="newPage"><i class="fa fa-file"></i><i class="fa fa-plus fa-small fa-invert"></i></button>';
 			
 			$html .= $this->render_pages_tree();
 			$html .= '</div><div id="pageContent">';
@@ -647,15 +660,24 @@
 				
 				$html .= $form->create('/admin/pages' . $path, 'editPage');
 				$html .= Nonce::field('editPage');
+				
+				$html .= '<div class="submit">';
 				$html .= $form->submit('<i class="fa fa-floppy-o"></i>', array(
-					'escape' => false
+					'escape' => false,
+					'div' => false
 				));
-				$html .= $form->input('content', array(
+				
+				if(!preg_match('/\/[0-9]*_/', $path)) {
+					$html .= ' <a href="' . preg_replace('/\/[0-9_]*/', '/', preg_replace('/(index)?\.markdown$/', '', $path)) . '" target="_blank" class="button"><i class="fa fa-eye"></i></a>';
+				}
+				$html .= '</div>';
+				
+				$html .= '<div class="input mdEdit">' . $form->input('content', array(
 					'type' => 'textarea',
-					'class' => 'mdEdit',
 					'default' => str_replace("\t", "    ", file_get_contents(PAGES_PATH . $path)),
-					'label' => false
-				));
+					'label' => false,
+					'div' => false
+				)) . '</div>';
 			}
 			
 			$html .= '</div>';

@@ -119,14 +119,23 @@
 			}
 			
 			$defaultOptions = array(
-				'escape' => true
+				'escape' => true,
+				'div' => true
 			);
 			
 			$options = array_merge($defaultOptions, $options);
 			
-			return '<div class="submit">
-					<button type="submit">' . ($options['escape'] ? htmlspecialchars($label) : $label) . '</button>
-				</div>';
+			$html = '';
+			
+			if($options['div']) {
+				$html .= '<div class="submit">';
+			}
+			$html .= '<button type="submit">' . ($options['escape'] ? htmlspecialchars($label) : $label) . '</button>';
+			if($options['div']) {
+				$html .= '</div>';
+			}
+			
+			return $html;
 		}
 		
 		public static function sent($name) {

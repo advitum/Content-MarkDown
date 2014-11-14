@@ -29,7 +29,8 @@ function box(content, buttons) {
 	}
 	
 	$.lightbox.open($dialogue, {
-		type: 'html'
+		type: 'html',
+		modular: true
 	});
 	
 	$('.box').find('input, textarea').eq(0).focus();

@@ -4,6 +4,8 @@
 	
 	class Router
 	{
+		private static $url = null;
+		
 		public static function init() {
 			if(isset($_SERVER["REDIRECT_URL"])) {
 				$url = $_SERVER["REDIRECT_URL"];
@@ -35,6 +37,10 @@
 		public static function redirect($url) {
 			header('Location: ' . $url);
 			exit();
+		}
+		
+		public static function here() {
+			return self::$url;
 		}
 		
 		public static function ls($folder) {
@@ -98,6 +104,8 @@
 		}
 		
 		private static function render($url) {
+			self::$url = $url;
+			
 			$file = self::urlToFile($url);
 			if($file === false) {
 				self::error404();
@@ -147,7 +155,17 @@
 		
 		private static function error404() {
 			header("HTTP/1.0 404 Not Found");
-			echo "Error 404!";
+			
+			Layout::setContent(<<<CONTENT
+<h1>Error 404: Page not found</h1>
+<p>The page you have been looking for could not be found.</p>
+CONTENT
+);
+			Layout::setActive(false);
+			Layout::setNavigation(self::buildNavigation());
+			Layout::setTitle('Page not found');
+			Layout::render();
+			
 			exit;
 		}
 		

@@ -1,11 +1,11 @@
 body {
 	margin: 0px;
-	padding: 0px;
+	padding: $rythm $rythm $rythm $rythm + $navWidth;
 	font-family: $fontText;
 	font-size: 16px;
 	line-height: $lineHeight;
-	background: grayScale(5%);
-	color: $colorLightGray;
+	background: $colorLightGray;
+	color: $colorDarkGray;
 }
 
 a {
@@ -26,6 +26,26 @@ h1, h2, h3, h4, h5, h6 {
 	font-style: normal;
 }
 
+p {
+	margin: 0px 0px $rythm;
+	padding: 0px;
+}
+
+#sidebar header, h1 {
+	font-family: $fontBig;
+	font-weight: bold;
+	font-size: 1.8em;
+	line-height: $lineHeight;
+	margin-bottom: $lineHeight;
+}
+
+footer {
+	position: absolute;
+	bottom: $rythm;
+	left: $rythm;
+	right: $rythm;
+}
+
 button, a.button {
 	@include border-radius(3px);
 	@include box-sizing(border-box);
@@ -35,7 +55,8 @@ button, a.button {
 	border: 1px solid grayScale(50%);
 	padding: 0px 10px;
 	margin: 0px;
-	line-height: 2em;
+	line-height: 40px;
+	height: 40px;
 	font-size: 1.2 * 16px;
 	text-align: center;
 	cursor: pointer;
@@ -43,6 +64,25 @@ button, a.button {
 	color: #000000;
 	text-decoration: none;
 	font-family: inherit;
+	min-width: 40px;
+	position: relative;
+	
+	.fa {
+		line-height: 40px;
+		text-align: center;
+		position: absolute;
+		left: 10px;
+		right: 10px;
+		top: 0px;
+		
+		&.fa-small {
+			font-size: .4em;
+		}
+		
+		&.fa-invert {
+			color: #ffffff;
+		}
+	}
 	
 	&:focus, &:active, &:hover {
 		border-color: grayScale(20%);
@@ -55,10 +95,6 @@ button, a.button {
 		&:focus, &:active, &:hover {
 			background: mix($colorSuccess, #ffffff, 30%);
 		}
-	}
-	
-	& > .fa-stack {
-		font-size: .5em;
 	}
 }
 
@@ -121,6 +157,7 @@ button, a.button {
 	background: grayScale(10%);
 	color: grayScale(95%);
 	border-bottom: 5px solid $colorDarkGray;
+	margin: -1 * $rythm -1 * $rythm $rythm;
 	
 	&.error {
 		background: mix($colorError, $colorDarkGray, 50%);
@@ -131,56 +168,49 @@ button, a.button {
 	}
 }
 
-nav#main {
+#sidebar {
 	@include box-sizing(border-box);
 	
-	float: left;
 	width: $navWidth;
-	color: grayScale(70%);
-	
-	a {
-		display: block;
-		text-decoration: none;
-		padding: .5 * $rythm $rythm .5 * $rythm 2 * $rythm;
-		outline: none;
-		
-		&.active {
-			color: grayScale(95%);
-			background: rgba(255, 255, 255, .05);
-		}
-		
-		&:hover, &:focus, &:active {
-			background: rgba(255, 255, 255, .1);
-		}
-	}
-	
-	h2 {
-		padding: .5 * $rythm $rythm;
-	}
-	
-	section {
-		padding: $rythm 0px;
-		
-		&:not(:first-child) {
-			border-top: 1px solid rgba(255, 255, 255, .2);
-		}
-	}
-}
-
-#content {
-	@include box-sizing(border-box);
-	
-	background: $colorLightGray;
-	color: $colorDarkGray;
-	margin-left: $navWidth;
+	background: grayScale(5%);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
 	padding: $rythm;
+	color: grayScale(80%);
 	
-	h1 {
-		font-family: $fontBig;
-		font-weight: bold;
-		font-size: 1.8em;
-		line-height: $lineHeight;
-		margin-bottom: $lineHeight;
+	nav {
+		margin: 0px -1 * $rythm 2 * $rythm;
+		color: grayScale(70%);
+		
+		a {
+			display: block;
+			text-decoration: none;
+			padding: .5 * $rythm $rythm .5 * $rythm 2 * $rythm;
+			outline: none;
+			
+			&.active {
+				color: grayScale(95%);
+				background: rgba(255, 255, 255, .05);
+			}
+			
+			&:hover, &:focus, &:active {
+				background: rgba(255, 255, 255, .1);
+			}
+		}
+		
+		h2 {
+			padding: .5 * $rythm $rythm;
+		}
+		
+		section {
+			padding: 0px 0px $rythm;
+			
+			&:not(:first-child) {
+				border-top: 1px solid rgba(255, 255, 255, .2);
+			}
+		}
 	}
 }
 
@@ -252,23 +282,15 @@ nav#main {
 }
 
 .mdEdit {
-	resize: none;
-	height: 500px;
-	margin: $rythm 0px 0px;
-	font-family: $fontCode;
-	display: block;
-}
-
-#newPage, #newFolder {
-	.fa-plus {
-		color: #ffffff;
-		position: relative;
-		top: 1px;
+	margin-bottom: 0px;
+	
+	textarea {
+		resize: none;
+		height: 500px;
+		margin: $rythm 0px 0px;
+		font-family: $fontCode;
+		display: block;
 	}
-}
-
-#newPage .fa-plus {
-	top: 3px;
 }
 
 #newDragElement {

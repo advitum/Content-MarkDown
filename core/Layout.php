@@ -8,7 +8,7 @@
 		private static $navigation = array();
 		private static $title = false;
 		private static $layout = 'default';
-		private static $active = '';
+		private static $active = false;
 		
 		private static $scripts = array();
 		private static $stylesheets = array();
@@ -20,6 +20,10 @@
 			$html = file_get_contents(LAYOUTS_PATH . self::$layout . '.tpl');
 			
 			$html = str_replace('{Content}', self::$content, $html);
+			
+			if(strpos($html, '{Message}') !== false) {
+				$html = str_replace('{Message}', Session::getMessage(), $html);
+			}
 			
 			$html = preg_replace_callback('/{Navigation(\|(?P<params>.*))?}/', function($matches) {
 				$params = array();
@@ -148,7 +152,7 @@
 					$html .= '<li>';
 				}
 				
-				$html .= '<a href="/" class="' . (self::$active == '' ? 'active' : '') . '">' . (is_string($params['home']) ? $params['home'] : 'Home') . '</a>';
+				$html .= '<a href="/" class="' . (self::$active !== false && self::$active == '' ? 'active' : '') . '">' . (is_string($params['home']) ? $params['home'] : 'Home') . '</a>';
 				
 				if($list) {
 					$html .= '</li>';
@@ -157,14 +161,22 @@
 			
 			foreach($items as $item) {
 				$newPath = $path . '/' . $item['name'];
-				$active = $newPath == substr(self::$active, 0, strlen($newPath));
+				$active = self::$active !== false && $newPath == substr(self::$active, 0, strlen($newPath));
 				
 				if($depth >= $params['start'] && ($params['end'] === false || $depth <= $params['end'])) {
 					if($list) {
 						$html .= '<li>';
 					}
 					
-					$html .= '<a href="' . $newPath . '" class="' . ($active ? 'active' : '') . '">' . ($item['navtitle'] !== false ? $item['navtitle'] : ucfirst($item['name'])) . '</a>';
+					$classes = array();
+					if($active) {
+						$classes[] = 'active';
+					}
+					if(isset($item['sub']) && $item['sub'] !== false && count($item['sub'])) {
+						$classes[] = 'sub';
+					}
+					
+					$html .= '<a href="' . $newPath . '"' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . ($item['navtitle'] !== false ? $item['navtitle'] : ucfirst($item['name'])) . '</a>';
 				}
 				
 				if(($active || $params['active'] === false) && isset($item['sub']) && $item['sub'] !== false && count($item['sub'])) {
