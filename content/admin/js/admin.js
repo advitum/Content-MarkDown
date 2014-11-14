@@ -3,7 +3,7 @@ $(document).ready(function() {
 		resize();
 	});
 	
-	$('.mdEdit').tabby({
+	$('.mdEdit textarea').tabby({
 		tabString: '    '
 	});
 	
@@ -22,12 +22,12 @@ $(document).ready(function() {
 			var hidden = $page.hasClass('hidden');
 			var folder = $page.hasClass('folder');
 			
-			if(!hidden) {
+			var path = $page.children('a').attr('href').replace(/^\/admin\/pages/, '');
+			if(!hidden && path.match(/\/[0-9]*_/) == null) {
 				items.push({
 					title: 'View',
 					callback: function(e) {
-						var path = $page.children('a').attr('href');
-						path = path.replace(/^\/admin\/pages/, '').replace(/\/[0-9_]+/g, '/').replace(/\.md$/, '').replace(/\/(index)?$/, '');
+						path = path.replace(/\/[0-9_]+/g, '/').replace(/(index)?\.markdown$/, '');
 						
 						if(path === '') {
 							path = '/';
@@ -163,18 +163,51 @@ $(document).ready(function() {
 });
 
 function resize() {
-	$('#content').css({
-		minHeight: $(window).height() - $('#content').offset().top + 'px'
-	});
-	$('.mdEdit').each(function() {
-		var padding = $('#content').css('paddingBottom');
+	$('.mdEdit textarea').each(function() {
+		var padding = $('body').css('paddingBottom');
 		padding = padding.substr(0, padding.length - 2) * 1;
 		if(isNaN(padding)) {
 			padding = 0;
 		}
 		
 		$(this).css({
-			height: $(window).height() - $(this).offset().top - padding + 'px'
+			height: Math.max(500, $(window).height() - $(this).offset().top - padding) + 'px'
 		});
+	});
+	
+	$('#sidebar').each(function() {
+		var sidebarHeight = 0;
+		var $nav = $(this).find('nav');
+		var $footer = $(this).find('footer');
+		
+		sidebarHeight += $nav.offset().top;
+		sidebarHeight += $nav.height();
+		
+		var margin = $nav.css('marginBottom');
+		margin = margin.substr(0, margin.length - 2) * 1;
+		if(isNaN(margin)) {
+			margin = 0;
+		}
+		sidebarHeight += margin;
+		
+		sidebarHeight += $footer.height();
+		
+		var padding = $(this).css('paddingTop');
+		padding = padding.substr(0, padding.length - 2) * 1;
+		if(isNaN(padding)) {
+			padding = 0;
+		}
+		
+		sidebarHeight += padding;
+		
+		if(sidebarHeight > $(window).height()) {
+			$(this).css('paddingBottom', padding + 'px');
+			$(this).css('overflowY', 'scroll');
+			$footer.css('position', 'static');
+		} else {
+			$(this).css('paddingBottom', padding + $footer.height() + 'px');
+			$(this).css('overflowY', 'visible');
+			$footer.css('position', 'absolute');
+		}
 	});
 }

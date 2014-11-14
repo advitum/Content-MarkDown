@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6 {
 	padding: 0px;
 }
 
-h1, #logo {
+h1, header {
 	font-size: 2em;
 	line-height: 1.2em;
 	margin-bottom: 1.2em;
@@ -88,21 +88,92 @@ a {
 nav {
 	margin-bottom: $lineHeight;
 	
+	ul, li {
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	li li {
+		padding-left: $rythm;
+	}
+	
 	a {
 		display: block;
 		text-decoration: none;
 		margin: 0px -1 * $rythm;
 		padding: .25 * $rythm $rythm;
 		
-		&:hover, &:active, &:focus {
-			opacity: 1;
+		&.active {
 			background: rgba(0, 0, 0, .05);
 		}
 		
-		&.active {
+		&:hover, &:active, &:focus {
+			opacity: 1;
+			background: rgba(0, 0, 0, .1);
+		}
+		
+		&.sub {
 			&::before {
-				content: "» ";
+				content: "▸ ";
 			}
+			
+			&.active {
+				&::before {
+					content: "▾ ";
+				}
+			}
+		}
+	}
+}
+
+%input {
+	@include box-sizing(border-box);
+	
+	display: block;
+	padding: .5 * $rythm $rythm;
+	border: 1px solid #999999;
+	background: #fbfbfb;
+	outline: none;
+	font-family: inherit;
+	font-size: 1em;
+	line-height: $lineHeight;
+	
+	&:hover, &:active, &:focus {
+		border-color: #666666;
+		background: #f5f5f5;
+	}
+}
+
+form {
+	.input {
+		margin-bottom: $rythm;
+		
+		&:not(.checkbox):not(.radio) {
+			label {
+				display: block;
+			}
+			
+			input, textarea {
+				@extend %input;
+				
+				width: 100%;
+			}
+			
+			textarea {
+				height: 8 * $lineHeight;
+				resize: vertical;
+			}
+		}
+	}
+	
+	.submit {
+		margin-bottom: $rythm;
+		
+		button {
+			@extend %input;
+			
+			cursor: pointer;
 		}
 	}
 }
@@ -123,6 +194,23 @@ nav {
 		left: $rythm;
 		right: $rythm;
 		bottom: $rythm;
+	}
+}
+
+#message {
+	text-align: center;
+	padding: $rythm;
+	background: #fbfbfb;
+	color: #333333;
+	border: 1px solid #999999;
+	margin-bottom: 2 * $rythm;
+	
+	&.error {
+		background: #f0dddd;
+	}
+	
+	&.success {
+		background: #ddf0dd;
 	}
 }
 

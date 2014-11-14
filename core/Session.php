@@ -11,14 +11,18 @@
 			);
 		}
 		
-		public static function printMessage() {
+		public static function getMessage() {
+			$html = '';
+			
 			if(isset($_SESSION['message']) && $_SESSION['message'] !== false) {
-?><div id="message"<?php if($_SESSION['message']['class'] !== false) { echo ' class="' . htmlspecialchars($_SESSION['message']['class']) . '"'; } ?>>
-	<?php echo $_SESSION['message']['text']; ?>
-</div><?php
+				$html .= '<div id="message"' . ($_SESSION['message']['class'] !== false ? ' class="' . htmlspecialchars($_SESSION['message']['class']) : '') . '">
+					' . $_SESSION['message']['text'] . '
+				</div>';
 				
 				$_SESSION['message'] = false;
 			}
+			
+			return $html;
 		}
 	}
 	
