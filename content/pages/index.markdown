@@ -1,6 +1,6 @@
 ﻿/**
  * Author: Lars Ebert
- * Date: 2014/11/09
+ * Date: 2015/01/31
  */
 Content MarkDown - free and simple markdown content management
 ==============================================================
@@ -134,15 +134,13 @@ Configuring the website
 
 The file content/config.php contains your website's configuration. First, you can define the constants LONG&#95;TITLE and SHORT&#95;TITLE. The long title will be used as the title if no title is provided by the page. The short title will be appended to the title otherwise.
 
-You also have to configure the database connection. That is what the four DATABASE_* constants are for.
+You also have to configure the database connection. That is what the four DATABASE_* constants are for. Or you use the new setup tool added in version 0.0.5. If no config file is present, it will guide you through creating one.
 
 Additionally, you can add stylesheets and scripts to the layout. For that, use the static methods addStylesheet and addScript of the Layout class. For example:
 
     Layout::addStylesheet('main', CSS_URL . '/main.css');
     Layout::addScript('jquery', JS_URL . '/jquery.min.js');
     Layout::addScript('main', JS_URL . '/main.js', array('jquery'));
-
-That is about all there is to tell about managing content with Content MarkDown. Go ahead and edit this page to contain your own content!
 
 
 Displaying images
@@ -183,6 +181,8 @@ You can get to the backend by navigating to the page /admin. The default admin p
 In the backend, you can edit, create and delete folders and pages and edit, create and delete users. Note that only the admin user has access to the user management.
 
 Some plugins might present you with a backend page of their own. You can see these in the backend menu listed under "Plugins". If you can not find the plugins menu, there are simply no plugins defining any backend page.
+
+That is about all there is to tell about managing content with Content MarkDown. Go ahead and edit this page to contain your own content!
 
 
 License

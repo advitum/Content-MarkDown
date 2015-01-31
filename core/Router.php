@@ -34,6 +34,63 @@
 			}
 		}
 		
+		public static function setup() {
+			if(is_file(CONTENT_PATH . 'config.php')) {
+				return;
+			}
+			
+			if(Form::sent('setup')) {
+				if(DB::connect(Form::value('setup', 'host'), Form::value('setup', 'username'), Form::value('setup', 'password'), Form::value('setup', 'database'), false)) {
+					$configuration = file_get_contents(CONTENT_PATH . 'config.default.php');
+					$configuration = str_replace('%HOST%', Form::value('setup', 'host'), $configuration);
+					$configuration = str_replace('%USERNAME%', Form::value('setup', 'username'), $configuration);
+					$configuration = str_replace('%PASSWORD%', Form::value('setup', 'password'), $configuration);
+					$configuration = str_replace('%DATABASE%', Form::value('setup', 'database'), $configuration);
+					
+					if(file_put_contents(CONTENT_PATH . 'config.php', $configuration)) {
+						Session::setMessage('Your configuration was saved. Have fun!', 'success');
+						Router::redirect(ROOT_URL);
+					} else {
+						Session::setMessage('Your configuration could not be written. Please check the file permissions of the content folder.', 'error');
+					}
+				} else {
+					Session::setMessage('The database connection could not be established. Please check your information.', 'error');
+				}
+			}
+			
+			?><h1>Content MarkDown Setup</h1>
+<p>Please enter the information needed to connect to your database.</p>
+<?php echo Session::getMessage(); ?>
+<?php echo Form::create(ROOT_URL, 'setup'); ?>
+	<?php echo Form::input('host', array(
+		'label' => 'Host',
+		'placeholder' => 'Host'
+	)) ?>
+	<?php echo Form::input('username', array(
+		'label' => 'Username',
+		'placeholder' => 'Username'
+	)) ?>
+	<?php echo Form::input('password', array(
+		'label' => 'Password',
+		'placeholder' => 'Password'
+	)) ?>
+	<?php echo Form::input('database', array(
+		'label' => 'Database',
+		'placeholder' => 'Database'
+	)) ?>
+<?php echo Form::end('Connect'); ?>
+<style type="text/css">
+	.input {
+		margin-bottom: 20px;
+	}
+
+	label {
+		display: block;
+	}
+</style>
+<?php
+		}
+		
 		public static function redirect($url) {
 			header('Location: ' . $url);
 			exit();

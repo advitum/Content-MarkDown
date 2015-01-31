@@ -1,6 +1,6 @@
 /**
  * Author: Lars Ebert
- * 2014/11/10
+ * 2015/01/31
  */
 Changelog
 =========
@@ -13,6 +13,24 @@ Changelog
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td>0.0.6</td>
+			<td>
+				<ul class="changelog">
+					<li class="added">Added an install tool to set up the database connection.</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>0.0.5</td>
+			<td>
+				<ul class="changelog">
+					<li class="changed">Changed placeholder and plugin syntax to use xml tags. This way, parameters can now be a json object.</li>
+					<li class="changed">Improved the styles of forms and errors in the frontend.</li>
+					<li class="added">Added a plugin for google maps.</li>
+				</ul>
+			</td>
+		</tr>
 		<tr>
 			<td>0.0.4</td>
 			<td>

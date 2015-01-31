@@ -31,7 +31,11 @@
 	});
 	
 	require_once(CORE_PATH . 'functions.php');
-	require_once(CONTENT_PATH . 'config.php');
-	Router::init();
+	if(!is_file(CONTENT_PATH . 'config.php')) {
+		Router::setup();
+	} else {
+		require_once(CONTENT_PATH . 'config.php');
+		Router::init();
+	}
 	
 ?>

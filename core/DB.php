@@ -6,15 +6,19 @@
 	{
 		public static $db = false;
 		
-		public static function connect($host, $user, $password, $database) {
+		public static function connect($host, $user, $password, $database, $verbose = true) {
 			self::$db = @new \mysqli($host, $user, $password, $database);
 			
-			if(DATABASE_DATABASE == '' || self::$db->connect_error) {
-				?><h1>Content MarkDown Setup</h1>
+			if($database == '' || self::$db->connect_error) {
+				if($verbose) {
+					?><h1>Content MarkDown Setup</h1>
 <?php if(self::$db->connect_error) { ?><p><?php echo self::$db->connect_error; ?></p><?php } ?>
 <p>Please check your database setup in <strong>content/config.php</strong>.</p>
 <?php
-				exit();
+					exit();
+				} else {
+					return false;
+				}
 			}
 			
 			if(self::selectSingle("SHOW TABLES LIKE 'nonces'") === false) {
@@ -38,6 +42,8 @@
   PRIMARY KEY (`id`)
 )");
 			}
+			
+			return true;
 		}
 		
 		public static function query($query) {
