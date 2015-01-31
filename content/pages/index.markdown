@@ -134,7 +134,7 @@ Configuring the website
 
 The file content/config.php contains your website's configuration. First, you can define the constants LONG&#95;TITLE and SHORT&#95;TITLE. The long title will be used as the title if no title is provided by the page. The short title will be appended to the title otherwise.
 
-You also have to configure the database connection. That is what the four DATABASE_* constants are for. Or you use the new setup tool added in version 0.0.5. If no config file is present, it will guide you through creating one.
+You also have to configure the database connection. That is what the four DATABASE_* constants are for. Or you use the new setup tool added in version 0.0.6. If no config file is present, it will guide you through creating one.
 
 Additionally, you can add stylesheets and scripts to the layout. For that, use the static methods addStylesheet and addScript of the Layout class. For example:
 
