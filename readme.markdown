@@ -1,5 +1,8 @@
-Content MarkDown - free and simple markdown content management
-==============================================================
+![Content MarkDown](https://raw.githubusercontent.com/advitum/Content-MarkDown/master/content/img/cmd-logo.png)
+===============================================================================================================
+
+Free and simple markdown content management
+-------------------------------------------
 
 Content MarkDown (Cmd) is a simple content management system that lets you manage your website's content through markdown. It comes with an easy to use backend and can also be managed through the file system, for example via FTP.
 
