@@ -18,6 +18,7 @@
 	
 	define('ROOT_URL', '/');
 	define('CONTENT_URL', ROOT_URL . 'content/');
+	define('IMAGE_URL', CONTENT_URL . 'img/');
 	define('CSS_URL', CONTENT_URL . 'css/');
 	define('JS_URL', CONTENT_URL . 'js/');
 	

@@ -1,6 +1,6 @@
 /**
  * Author: Lars Ebert
- * Date: 2015/01/31
+ * Date: 2015/02/01
  */
 Changelog
 =========
@@ -13,6 +13,19 @@ Changelog
         </tr>
     </thead>
     <tbody>
+        <tr>
+            <td>0.0.7</td>
+            <td>
+                <ul class="changelog">
+                    <li class="added">Content MarkDown now as an official logo.</li>
+                    <li class="added">Added IMAGE_URL constant.</li>
+                    <li class="added">Added config file to .gitignore.</li>
+                    <li class="changed">Fixed multiple errors in default content.</li>
+                    <li class="changed">Fixed error in Backend (files getting named .md instead of .markdown).</li>
+                    <li class="changed">Using CONTENT_URL in Backend layout.</li>
+                </ul>
+            </td>
+        </tr>
         <tr>
             <td>0.0.6</td>
             <td>
@@ -70,7 +83,7 @@ Changelog
                 <ul class="changelog">
                     <li class="changed">Fixed default template</li>
                     <li class="changed">Fixed the header extraction for files with BOM</li>
-                    <li class="removed">Removed the MEDIA_URL constant. The folder is non existend and the constant not used. Maybe this will be added back in if I write a media plugin or something.</li>
+                    <li class="removed">Removed the MEDIA_URL constant. The folder is non existent and the constant not used. Maybe this will be added back in if I write a media plugin or something.</li>
                     <li class="removed">Removed the PLUGIN_URL constant.</li>
                     <li class="added">Added CONTENT_URL constant.</li>
                     <li class="added">Added a gallery plugin.</li>

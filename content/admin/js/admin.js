@@ -98,7 +98,7 @@ $(document).ready(function() {
 		if($(this).attr('id') == 'newFolder') {
 			$element.text('_unnamed').addClass('folder');
 		} else {
-			$element.text('_unnamed.md');
+			$element.text('_unnamed.markdown');
 		}
 		
 		$element.css({
@@ -140,7 +140,7 @@ $(document).ready(function() {
 			if(isFolder) {
 				document.location.href = path + '?newfolder=_unnamed&_nonce=' + encodeURI(nonces.newFolder);
 			} else {
-				document.location.href = path + '?newpage=_unnamed.md&_nonce=' + encodeURI(nonces.newPage);
+				document.location.href = path + '?newpage=_unnamed.markdown&_nonce=' + encodeURI(nonces.newPage);
 			}
 		});
 	});

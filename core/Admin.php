@@ -40,14 +40,14 @@
 		public static function init($params) {
 			$admin = new Admin($params);
 			
-			Admin::addScript('jquery', '/content/admin/js/jquery-1.11.1.min.js');
-			Admin::addScript('textarea', '/content/admin/js/jquery.textarea.min.js', array('jquery'));
-			Admin::addScript('lightbox', '/content/admin/js/jquery.lightbox.js', array('jquery'));
-			Admin::addScript('box', '/content/admin/js/box.js', array('jquery', 'lightbox'));
-			Admin::addScript('contextmenu', '/content/admin/js/contextmenu.js', array('jquery'));
-			Admin::addScript('admin', '/content/admin/js/admin.js', array('jquery', 'textarea', 'lightbox', 'box', 'contextmenu'));
+			Admin::addScript('jquery', CONTENT_URL . 'admin/js/jquery-1.11.1.min.js');
+			Admin::addScript('textarea', CONTENT_URL . 'admin/js/jquery.textarea.min.js', array('jquery'));
+			Admin::addScript('lightbox', CONTENT_URL . 'admin/js/jquery.lightbox.js', array('jquery'));
+			Admin::addScript('box', CONTENT_URL . 'admin/js/box.js', array('jquery', 'lightbox'));
+			Admin::addScript('contextmenu', CONTENT_URL . 'admin/js/contextmenu.js', array('jquery'));
+			Admin::addScript('admin', CONTENT_URL . 'admin/js/admin.js', array('jquery', 'textarea', 'lightbox', 'box', 'contextmenu'));
 			
-			Admin::addStylesheet('admin', '/content/admin/css/admin.css');
+			Admin::addStylesheet('admin', CONTENT_URL . 'admin/css/admin.css');
 			
 			User::create('admin', 'admin');
 			
@@ -311,7 +311,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo ($this->title === null ? 'Backend - ' . SHORT_TITLE : htmlspecialchars($this->title) . ' - Backend - ' . SHORT_TITLE); ?></title>
 	<meta name="referrer" content="never" />
-	<!--[if lt IE 9]><script type="text/javascript" src="/content/admin/js/html5shiv.js"></script><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="<?php echo CONTENT_URL; ?>admin/js/html5shiv.js"></script><![endif]-->
 	
 	<?php
 		
@@ -327,7 +327,7 @@
 	
 	<div id="sidebar">
 		<header>
-			Content MarkDown
+			<img src="<?php echo CONTENT_URL; ?>admin/img/cmd-logo.png" alt="Content MarkDown" />
 		</header>
 		<?php if($this->user !== null) { ?><nav>
 			<?php $this->navigation(); ?>

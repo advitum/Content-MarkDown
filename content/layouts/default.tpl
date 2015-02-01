@@ -6,7 +6,7 @@
 <body>
 	<div id="sidebar">
 		<header>
-			Content MarkDown
+			<a href="/"><img src="/content/img/cmd-logo.png" alt="Content MarkDown" /></a>
 		</header>
 		<nav><cmd:navigation /></nav>
 		<footer>
